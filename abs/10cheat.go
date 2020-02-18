@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 func main() {
@@ -14,5 +15,15 @@ func main() {
 }
 
 func erasedream(str string) string {
-	
+	str = strings.Replace(str, "erase", "E", -1)
+	str = strings.Replace(str, "dream", "D", -1)
+	str = strings.Replace(str, "Der", "", -1)
+	str = strings.Replace(str, "Er", "", -1)
+	str = strings.Replace(str, "D", "", -1)
+	str = strings.Replace(str, "E", "", -1)
+	if (len(str) == 0) {
+		return "YES"
+	} else {
+		return "NO"
+	}
 }
