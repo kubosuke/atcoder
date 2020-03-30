@@ -1,43 +1,58 @@
+// bit.ly/39L0tP7
+// bufio.scanはデータ数が多くても安定、小規模ならfmt.Scan
+
 package main
 
 import (
-  "fmt"
-  "bufio"
-  "os"
+	"bufio"
+	"fmt"
+	"os"
+	"strconv"
+	"strings"
 )
 
-var sc = bufio.NewScanner(os.Stdin)
-
 func main() {
-  var s string
-  var q int
-  var t,f int
-  var c string
+	var s string
+	var q int
+	var flag bool = true
+	sc := bufio.NewScanner(os.Stdin)
 
-  fmt.Scan(&s)
-  fmt.Scan(&q)
-
-  for i:=0;i<q;i++ {
-    fmt.Scan(&t)
-    if t==1 {
-      s = reverse(s)
-    } else {
-      fmt.Scan(&f)
-      fmt.Scan(&c)
-      if f==1 {
-        s = c+s
-      } else {
-        s = s+c
-      }
-    }
-  }
-  fmt.Println(s)
+	sc.Scan()
+	s = sc.Text()
+	sc.Scan()
+	q, _ = strconv.Atoi(sc.Text())
+	for i := 0; i < q; i++ {
+		sc.Scan()
+		slice := strings.Split(sc.Text(), " ")
+		if slice[0] == "1" {
+			flag = !flag
+		} else {
+			if slice[1] == "1" {
+				if flag {
+					s = slice[2] + s
+				} else {
+					s = s + slice[2]
+				}
+			} else {
+				if flag {
+					s = s + slice[2]
+				} else {
+					s = slice[2] + s
+				}
+			}
+		}
+	}
+	if flag {
+		fmt.Println(s)
+	} else {
+		fmt.Println(reverse(s))
+	}
 }
 
 func reverse(s string) string {
-    rs := []rune(s)
-    for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
-        rs[i], rs[j] = rs[j], rs[i]
-    }
-    return string(rs)
+	rs := []rune(s)
+	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+		rs[i], rs[j] = rs[j], rs[i]
+	}
+	return string(rs)
 }
