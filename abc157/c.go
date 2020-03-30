@@ -19,6 +19,6 @@ func main() {
 	fmt.Println(check())
 }
 
-func check(n int, keta []int, numlist []int) {
-	
+func check(n,m int, keta,numlist []int) {
+	idealnum := make([]int, n)
 }
