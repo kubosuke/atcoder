@@ -1,67 +1,121 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"sort"
+	"strconv"
 )
 
+func getScanner(fp *os.File) *bufio.Scanner {
+	scanner := bufio.NewScanner(fp)
+	scanner.Split(bufio.ScanWords)
+	scanner.Buffer(make([]byte, 1000005), 1000005)
+	return scanner
+}
+
+func getNextString(scanner *bufio.Scanner) string {
+	scanner.Scan()
+	return scanner.Text()
+}
+
+func getNextInt(scanner *bufio.Scanner) int {
+	i, _ := strconv.Atoi(getNextString(scanner))
+	return i
+}
+
+func getNextInt64(scanner *bufio.Scanner) int64 {
+	i, _ := strconv.ParseInt(getNextString(scanner), 10, 64)
+	return i
+}
+
+func getNextUint64(scanner *bufio.Scanner) uint64 {
+	i, _ := strconv.ParseUint(getNextString(scanner), 10, 64)
+	return i
+}
+
+func getNextFloat64(scanner *bufio.Scanner) float64 {
+	i, _ := strconv.ParseFloat(getNextString(scanner), 64)
+	return i
+}
+
 func main() {
-	var n, x, y, z int
-	fmt.Scan(&n)
-	fmt.Scan(&x)
-	fmt.Scan(&y)
-	fmt.Scan(&z)
-	a := make([]int, n)
+	fp := os.Stdin
+	wfp := os.Stdout
+	cnt := 0
+
+	scanner := getScanner(fp)
+	writer := bufio.NewWriter(wfp)
+	solve(scanner, writer)
+	for i := 0; i < cnt; i++ {
+		fmt.Fprintln(writer, "-----------------------------------")
+		solve(scanner, writer)
+	}
+	writer.Flush()
+}
+
+func solve(scanner *bufio.Scanner, writer *bufio.Writer) {
+	n := getNextInt(scanner)
+	x := getNextInt(scanner)
+	y := getNextInt(scanner)
+	z := getNextInt(scanner)
+
+	aa := make([]int, n)
 	for i := 0; i < n; i++ {
-		fmt.Scan(&a[i])
+		aa[i] = getNextInt(scanner)
 	}
-	fmt.Println(task(a, x, y, z))
+
+	loop := [3]int{
+		z,
+		y,
+		x,
+	}
+	money := [3]int{
+		10000,
+		5000,
+		1000,
+	}
+	for l := 0; l < 3; l++ {
+		sort.Ints(aa)
+		for i := n - 1; i >= 0; i-- {
+			if aa[i] < 0 {
+				continue
+			}
+
+			if loop[l] > 0 {
+				used := aa[i] / money[l]
+				if loop[l] >= used {
+					aa[i] -= money[l] * used
+					loop[l] -= used
+				}
+			}
+		}
+		sort.Ints(aa)
+		for i := n - 1; i >= 0; i-- {
+			if aa[i] < 0 {
+				continue
+			}
+
+			if loop[l] > 0 {
+				aa[i] -= money[l]
+				loop[l]--
+			}
+		}
+	}
+	if complete(aa) {
+		fmt.Fprintln(writer, "Yes")
+		return
+	}
+	fmt.Fprintln(writer, "No")
 }
 
-func task(a []int, x, y, z int) string {
-    p,i := Max(a)
-    if p < 0 || x+y+z == 0 {
-      return "No"
-    }
-		for z!=0 {
-			z--
-			a[i] -= 10000
-      p,i = Max(a)
-		}
-		for y != 0 {
-			y--
-			a[i] -= 5000
-      p,i = Max(a)
-		}
-		if x != 0 {
-			x--
-			a[i] -= 1000
-      p,i = Max(a)
-		}
-    p,_ = Max(a)
-	if p>-1 {
-		return "No"
-	} else {
-		return "Yes"
-	}
-}
-
-func task2(a []int) bool {
-	for _, n := range a {
-		if n > -1 {
-			return true
+func complete(aa []int) bool {
+	n := len(aa)
+	for i := 0; i < n; i++ {
+		if aa[i] >= 0 {
+			return false
 		}
 	}
-	return false
-}
-
-func Max(array []int) (int, int) {
-  var key,value,i int
-	var max int = array[0]
-	for i, value = range array {
-		if max < value {
-			max = value
-			key = i
-		}
-	}
-	return max, key
+	return true
 }

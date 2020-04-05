@@ -1,0 +1,14 @@
+<svg id="lighting" x="0" y="0" width="10000" height="10000" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+<defs>
+    <radialGradient id="grad" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#000"/>
+      <stop offset="20%"  stop-color="#333"/>
+      <stop offset="100%" stop-color="#fff"/>
+    </radialGradient>
+    <mask id="mask">
+      <rect x="0" y="0" width="10000" height="10000" fill="#fff" />
+      <ellipse id="light" cx="0" cy="0" rx="0" ry="0" fill="url(#grad)" />
+    </mask>
+</defs>
+<rect x="0" y="0" width="10000" height="10000" fill="#000" mask="url(#mask")></rect>
+</svg>
